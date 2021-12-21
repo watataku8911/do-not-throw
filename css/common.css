@@ -1,0 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.module--spacing--verySmall {
+  height: 10px;
+}
+
+.module--spacing--small {
+  height: 20px;
+}
+
+.module--spacing--large {
+  height: 30px;
+}
+
+.module--spacing--veryLarge {
+  height: 40px;
+}
