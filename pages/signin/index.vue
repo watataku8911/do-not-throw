@@ -11,13 +11,25 @@
     />
     <div class="module--spacing--verySmall"></div>
     <p>8文字以上の半角英数字で入力して下さい</p>
-    <TextInput
-      v-model:modalValue="form.passwd"
-      type="password"
-      placeholder="パスワード"
-      name="passwd"
-      :value="form.passwd"
-    />
+    <div class="passwd-box">
+      <div class="passwd-input-zone">
+        <TextInput
+          v-model:modalValue="form.passwd"
+          :type="form.type"
+          placeholder="パスワード"
+          name="passwd"
+          :value="form.passwd"
+        />
+      </div>
+      <div class="passwd-look-zone" @click="change()">
+        <p v-if="form.type == 'text'">
+          <img src="../../img/look.svg" width="100" height="50" />
+        </p>
+        <p v-if="form.type == 'password'">
+          <img src="../../img/not-look.svg" width="100" height="50" />
+        </p>
+      </div>
+    </div>
     <div class="module--spacing--large"></div>
     <Button msg="ログイン" @push="login" />
     <div class="module--spacing--verySmall"></div>
@@ -48,6 +60,7 @@ import Button from "../../components/Button.vue";
 type FormData = {
   email: string;
   passwd: string;
+  type: string;
   emptyEmail: boolean;
   validEmail: boolean;
   emptyPasswd: boolean;
@@ -62,11 +75,20 @@ export default defineComponent({
     const form = reactive<FormData>({
       email: "",
       passwd: "",
+      type: "password",
       emptyEmail: false,
       validEmail: false,
       emptyPasswd: false,
       validPasswd: false,
     });
+
+    const change = () => {
+      if (form.type == "password") {
+        form.type = "text";
+      } else if (form.type == "text") {
+        form.type = "password";
+      }
+    };
 
     const login = () => {
       let errFlg = false;
@@ -113,6 +135,7 @@ export default defineComponent({
 
     return {
       form,
+      change,
       login,
     };
   },
@@ -125,6 +148,21 @@ export default defineComponent({
   width: 450px;
   height: 400px;
   background-color: antiquewhite;
+}
+
+.passwd-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.passwd-input-zone {
+  width: 95%;
+}
+
+.passwd-look-zone {
+  padding-top: 3px;
 }
 
 .err-msg {
