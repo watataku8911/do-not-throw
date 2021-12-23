@@ -36,18 +36,22 @@
     <NuxtLink to="/signup">アカウントをお持ちでない方はこちらへ。</NuxtLink>
     <div class="module--spacing--verySmall"></div>
     <NuxtLink to="/">HOME</NuxtLink>
-    <p class="err-msg" v-if="form.emptyEmail">
-      メールアドレスを入力してください。
-    </p>
-    <p class="err-msg" v-if="form.validEmail">
-      メールアドレスを正しく入力してください。
-    </p>
-    <p class="err-msg" v-if="form.emptyPasswd">
-      パスワードを入力してください。
-    </p>
-    <p class="err-msg" v-if="form.validPasswd">
-      パスワードは8文字以上の半角英数字で入力して下さい
-    </p>
+    <div class="err-box">
+      <ul>
+        <li class="err-msg" v-if="form.emptyEmail">
+          メールアドレスを入力してください。
+        </li>
+        <li class="err-msg" v-if="form.validEmail">
+          メールアドレスを正しく入力してください。
+        </li>
+        <li class="err-msg" v-if="form.emptyPasswd">
+          パスワードを入力してください。
+        </li>
+        <li class="err-msg" v-if="form.validPasswd">
+          パスワードは8文字以上の半角英数字で入力して下さい
+        </li>
+      </ul>
+    </div>
   </section>
 </template>
 
@@ -115,7 +119,6 @@ export default defineComponent({
       } else {
         form.emptyEmail = false;
         form.validEmail = false;
-        valid = false;
       }
       if (form.passwd.length == 0) {
         form.emptyPasswd = true;
@@ -128,7 +131,6 @@ export default defineComponent({
       } else {
         form.emptyPasswd = false;
         form.validPasswd = false;
-        valid = false;
       }
       return valid;
     };
@@ -145,9 +147,9 @@ export default defineComponent({
 <style scoped>
 .login-box {
   text-align: center;
-  width: 450px;
-  height: 400px;
+  width: 550px;
   background-color: antiquewhite;
+  margin: auto;
 }
 
 .passwd-box {
@@ -163,6 +165,13 @@ export default defineComponent({
 
 .passwd-look-zone {
   padding-top: 3px;
+}
+
+.err-box {
+  position: absolute;
+  top: 10vh;
+  left: 5vh;
+  border: solid, 3px, orange;
 }
 
 .err-msg {
