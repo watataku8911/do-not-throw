@@ -12,8 +12,10 @@
   </label>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   emits: ["fileList"],
   setup(_, context) {
     const onDrop = (e) => {
@@ -24,7 +26,7 @@ export default {
     };
     return { onDrop };
   },
-};
+});
 </script>
 
 <style scoped>

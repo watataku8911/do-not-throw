@@ -11,8 +11,10 @@
   </textarea>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   props: {
     placeholder: { type: String },
     cols: { type: String },
@@ -25,7 +27,7 @@ export default {
       this.$emit("input", e.target.value);
     },
   },
-};
+});
 </script>
 
 <style scoped>

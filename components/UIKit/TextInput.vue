@@ -9,8 +9,10 @@
   />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   props: {
     type: { type: String, required: true },
     placeholder: { type: String, required: true },
@@ -24,7 +26,7 @@ export default {
     };
     return { updateValue };
   },
-};
+});
 </script>
 
 <style scoped>
