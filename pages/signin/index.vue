@@ -35,7 +35,6 @@
     <div class="module--spacing--verySmall"></div>
     <NuxtLink to="/signup">アカウントをお持ちでない方はこちらへ。</NuxtLink>
     <div class="module--spacing--verySmall"></div>
-    <NuxtLink to="/">HOME</NuxtLink>
     <div class="err-box">
       <ul>
         <li class="err-msg" v-if="form.emptyEmail">
@@ -169,8 +168,8 @@ export default defineComponent({
 
 .err-box {
   position: absolute;
-  top: 10vh;
-  left: 5vh;
+  top: 15vh;
+  right: 5vh;
   border: solid, 3px, orange;
 }
 

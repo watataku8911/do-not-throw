@@ -4,15 +4,17 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+
+export default defineComponent({
   props: {
     imageUrl: {
       type: String,
       required: true,
     },
   },
-};
+});
 </script>
 <style scoped>
 @media screen and (min-width: 1026px) {

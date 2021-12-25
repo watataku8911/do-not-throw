@@ -35,7 +35,12 @@
       :value="form.address"
     />
     <div class="module--spacing--small"></div>
-    <Button msg="住所を検索する" @push="searchAdress()" />
+    <Button
+      msg="住所を検索する"
+      @push="searchAdress()"
+      v-show="form.searchNow"
+    />
+    <Loading v-show="!form.searchNow" />
     <div class="module--spacing--small"></div>
     <div class="imgContent">
       <ImagePreview :imageUrl="form.imageUrl" />
@@ -77,7 +82,6 @@
     <div class="module--spacing--verySmall"></div>
     <NuxtLink to="/signin">アカウントをお持ちの方はこちらへ。</NuxtLink>
     <div class="module--spacing--verySmall"></div>
-    <NuxtLink to="/">HOME</NuxtLink>
     <div class="err-box">
       <ul>
         <li class="err-msg" v-if="form.emptyName">
@@ -117,8 +121,36 @@ import TextInput from "../../components/UIKit/TextInput.vue";
 import Button from "../../components/UIKit/Button.vue";
 import ImagePreview from "../../components/UIKit/ImagePreview.vue";
 import UploadFile from "../../components/UIKit/UploadFile.vue";
+import Loading from "../../components/UIKit/Loading.vue";
 //import Look from "../../img/look.svg";
-
+type Resp = {
+  config: object;
+  data: Data;
+  headers: RespHeaders;
+  request: object;
+  status: number;
+  statusText: string;
+};
+type RespHeaders = {
+  cacheControl: string;
+  contentLength: string;
+  contentType: string;
+};
+type Data = {
+  message: string;
+  results: Array<Results>;
+  status: number;
+};
+type Results = {
+  address1: string;
+  address2: string;
+  address3: string;
+  kana1: string;
+  kana2: string;
+  kana3: string;
+  prefcode: string;
+  zipcode: string;
+};
 type FormData = {
   name: string;
   email: string;
@@ -137,6 +169,7 @@ type FormData = {
   emptyPasswd: boolean;
   validPasswd: boolean;
   matchPasswd: boolean;
+  searchNow: boolean;
 };
 export default defineComponent({
   components: {
@@ -144,6 +177,7 @@ export default defineComponent({
     Button,
     ImagePreview,
     UploadFile,
+    Loading,
     //Look,
   },
   setup() {
@@ -165,6 +199,7 @@ export default defineComponent({
       emptyPasswd: false,
       validPasswd: false,
       matchPasswd: false,
+      searchNow: true,
     });
 
     const signup = () => {
@@ -176,28 +211,36 @@ export default defineComponent({
     };
 
     const searchAdress = () => {
-      const endPoint = "https://zipcloud.ibsnet.co.jp/api/search";
       if (form.postcode.length == 0) {
         alert("郵便番号入力なし");
       } else {
-        axios
-          .get(endPoint + "?zipcode=" + Number(form.postcode))
-          .then((resp) => {
-            const address1 = resp.data.results[0].address1;
-            const address2 = resp.data.results[0].address2;
-            const address3 = resp.data.results[0].address3;
+        dataFetch()
+          .then((addressData: Resp) => {
+            if (addressData.data.results == null) {
+              alert(addressData.data.message);
+              form.searchNow = true;
+            } else {
+              const address1 = addressData.data.results[0].address1;
+              const address2 = addressData.data.results[0].address2;
+              const address3 = addressData.data.results[0].address3;
 
-            form.address = address1 + address2 + address3;
+              form.address = address1 + address2 + address3;
+              form.searchNow = true;
+            }
           })
-          .catch((err) => {
-            alert(
-              "検索できませんでした。\n郵便番号が正しいかもう一度お確かめください。"
-            );
-          });
+          .catch((err) => console.error(err));
       }
     };
 
-    const search = async () => {};
+    const dataFetch = (): Promise<Resp | null> => {
+      const endPoint = "https://zipcloud.ibsnet.co.jp/api/search";
+      return new Promise((resolve, reject) => {
+        axios
+          .get(endPoint + "?zipcode=" + Number(form.postcode))
+          .then((resp: Resp) => resolve(resp))
+          .catch(() => reject(null));
+      });
+    };
 
     const validation = (): boolean => {
       const regexp =
@@ -331,8 +374,8 @@ export default defineComponent({
 
 .err-box {
   position: absolute;
-  top: 10vh;
-  left: 5vh;
+  top: 50vh;
+  right: 5vh;
   border: solid, 3px, orange;
 }
 
