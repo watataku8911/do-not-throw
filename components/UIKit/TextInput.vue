@@ -33,6 +33,6 @@ export default {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-  font-size: 3vh;
+  font-size: 3.5vh;
 }
 </style>
