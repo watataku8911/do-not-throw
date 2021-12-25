@@ -10,7 +10,7 @@
       :value="form.email"
     />
     <div class="module--spacing--verySmall"></div>
-    <p>8文字以上の半角英数字で入力して下さい</p>
+    <p>※8文字以上の半角英数字で入力して下さい</p>
     <div class="passwd-box">
       <div class="passwd-input-zone">
         <TextInput
@@ -58,8 +58,8 @@
 <script lang="ts">
 import "../../css/common.css";
 import { defineComponent, reactive } from "vue";
-import TextInput from "../../components/TextInput.vue";
-import Button from "../../components/Button.vue";
+import TextInput from "../../components/UIKit/TextInput.vue";
+import Button from "../../components/UIKit/Button.vue";
 
 type FormData = {
   email: string;

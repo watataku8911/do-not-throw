@@ -16,6 +16,16 @@
       name="email"
       :value="form.email"
     />
+    <div class="module--spacing--verySmall"></div>
+    <p>※数字のみ</p>
+    <div class="module--spacing--verySmall"></div>
+    <TextInput
+      v-model:modalValue="form.postcode"
+      type="text"
+      placeholder="郵便番号"
+      name="postcode"
+      :value="form.postcode"
+    />
     <div class="module--spacing--small"></div>
     <TextInput
       v-model:modalValue="form.address"
@@ -25,12 +35,16 @@
       :value="form.address"
     />
     <div class="module--spacing--small"></div>
+    <Button msg="住所を検索する" @push="searchAdress()" />
+    <div class="module--spacing--small"></div>
     <div class="imgContent">
       <ImagePreview :imageUrl="form.imageUrl" />
       <div class="module--spacing--largeSmall"></div>
       <UploadFile @fileList="setFileList" />
     </div>
-    <div class="module--spacing--small"></div>
+
+    <p>※8文字以上の半角英数字で入力して下さい</p>
+    <div class="module--spacing--verySmall"></div>
     <div class="passwd-box">
       <div class="passwd-input-zone">
         <TextInput
@@ -75,7 +89,10 @@
         <li class="err-msg" v-if="form.validEmail">
           メールアドレスを正しく入力してください。
         </li>
-        <li class="err-msg" v-if="form.emptyAdress">
+        <li class="err-msg" v-if="form.emptyPostcode">
+          郵便番号を入力してください。
+        </li>
+        <li class="err-msg" v-if="form.emptyAddress">
           住所を入力してください。
         </li>
         <li class="err-msg" v-if="form.emptyPasswd">
@@ -94,15 +111,19 @@
 
 <script lang="ts">
 import "../../css/common.css";
+import axios from "axios";
 import { defineComponent, reactive } from "vue";
-import TextInput from "../../components/TextInput.vue";
-import Button from "../../components/Button.vue";
+import TextInput from "../../components/UIKit/TextInput.vue";
+import Button from "../../components/UIKit/Button.vue";
+import ImagePreview from "../../components/UIKit/ImagePreview.vue";
+import UploadFile from "../../components/UIKit/UploadFile.vue";
 //import Look from "../../img/look.svg";
 
 type FormData = {
   name: string;
   email: string;
   address: string;
+  postcode: string;
   fileList: object;
   imageUrl: string;
   passwd: string;
@@ -111,7 +132,8 @@ type FormData = {
   emptyName: boolean;
   emptyEmail: boolean;
   validEmail: boolean;
-  emptyAdress: boolean;
+  emptyPostcode: boolean;
+  emptyAddress: boolean;
   emptyPasswd: boolean;
   validPasswd: boolean;
   matchPasswd: boolean;
@@ -120,6 +142,8 @@ export default defineComponent({
   components: {
     TextInput,
     Button,
+    ImagePreview,
+    UploadFile,
     //Look,
   },
   setup() {
@@ -127,6 +151,7 @@ export default defineComponent({
       name: "",
       email: "",
       address: "",
+      postcode: "",
       fileList: null,
       imageUrl: "",
       passwd: "",
@@ -135,7 +160,8 @@ export default defineComponent({
       emptyName: false,
       emptyEmail: false,
       validEmail: false,
-      emptyAdress: false,
+      emptyPostcode: false,
+      emptyAddress: false,
       emptyPasswd: false,
       validPasswd: false,
       matchPasswd: false,
@@ -148,6 +174,30 @@ export default defineComponent({
         alert("signup");
       }
     };
+
+    const searchAdress = () => {
+      const endPoint = "https://zipcloud.ibsnet.co.jp/api/search";
+      if (form.postcode.length == 0) {
+        alert("郵便番号入力なし");
+      } else {
+        axios
+          .get(endPoint + "?zipcode=" + Number(form.postcode))
+          .then((resp) => {
+            const address1 = resp.data.results[0].address1;
+            const address2 = resp.data.results[0].address2;
+            const address3 = resp.data.results[0].address3;
+
+            form.address = address1 + address2 + address3;
+          })
+          .catch((err) => {
+            alert(
+              "検索できませんでした。\n郵便番号が正しいかもう一度お確かめください。"
+            );
+          });
+      }
+    };
+
+    const search = async () => {};
 
     const validation = (): boolean => {
       const regexp =
@@ -175,11 +225,18 @@ export default defineComponent({
         form.validEmail = false;
       }
 
-      if (form.address.length == 0) {
-        form.emptyAdress = true;
+      if (form.postcode.length == 0) {
+        form.emptyPostcode = true;
         valid = true;
       } else {
-        form.emptyAdress = false;
+        form.emptyPostcode = false;
+      }
+
+      if (form.address.length == 0) {
+        form.emptyAddress = true;
+        valid = true;
+      } else {
+        form.emptyAddress = false;
       }
 
       if (form.passwd.length == 0) {
@@ -222,6 +279,7 @@ export default defineComponent({
     return {
       form,
       signup,
+      searchAdress,
       setFileList,
       change,
     };
