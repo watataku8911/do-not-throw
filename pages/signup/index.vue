@@ -70,10 +70,10 @@
       </div>
       <div class="passwd-look-zone" @click="change()">
         <p v-if="form.type == 'text'">
-          <img src="../../img/look.svg" width="100" height="50" />
+          <img src="../../assets/img/look.svg" width="100" height="50" />
         </p>
         <p v-if="form.type == 'password'">
-          <img src="../../img/not-look.svg" width="100" height="50" />
+          <img src="../../assets/img/not-look.svg" width="100" height="50" />
         </p>
       </div>
     </div>
@@ -114,7 +114,7 @@
 </template>
 
 <script lang="ts">
-import "../../css/common.css";
+import "../../assets/css/common.css";
 import axios from "axios";
 import { defineComponent, reactive } from "vue";
 import TextInput from "../../components/UIKit/TextInput.vue";

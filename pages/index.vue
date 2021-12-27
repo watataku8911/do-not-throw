@@ -1,13 +1,118 @@
 <template>
-  <div>Home</div>
+  <div>
+    <section class="main-image">
+      <div class="main-image-title-box">
+        <h1 class="main-image-title">Don't throw</h1>
+      </div>
+      <div class="pic_down"></div>
+    </section>
+
+    <section class="contents">
+      <div class="do-not-throw-box">
+        <h1 class="do-not-throw-title"><span>Don't throw</span>とは</h1>
+        <div class="do-not-throw-body">
+          <p class="do-not-throw-text">フードロスを防ぐアプリ。</p>
+        </div>
+      </div>
+      <div class="how-to-use-box">
+        <h1 class="how-to-use-title">使い方</h1>
+        <div class="do-not-throw-body">
+          <p class="do-not-throw-text">フードロスを防ぐアプリ。</p>
+        </div>
+      </div>
+      <div class="question-box">
+        <h1 class="question-title">よくある質問</h1>
+        <div class="do-not-throw-body">
+          <p class="do-not-throw-text">フードロスを防ぐアプリ。</p>
+        </div>
+      </div>
+      <div class="module--spacing--large"></div>
+      <Privacy />
+    </section>
+    <div class="module--spacing--veryLarge"></div>
+    <section class="get-start">
+      <NuxtLink to="/signin">アカウントをお持ちの方はこちらへ。</NuxtLink>
+      <NuxtLink to="/signup">アカウントをお持ちでない方はこちらへ。</NuxtLink>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
+import "../assets/css/common.css";
 import { defineComponent } from "vue";
 
+import Privacy from "../components/Privacy.vue";
+
 export default defineComponent({
+  components: {
+    Privacy,
+  },
   setup() {},
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.main-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 88vh;
+  border-bottom: solid 1px #000;
+}
+
+.main-image-title {
+  font-family: "Anton", sans-serif;
+  font-family: "Lobster", cursive;
+  font-size: 4em;
+}
+
+.pic_down {
+  position: absolute;
+  bottom: 10vh;
+  text-align: -webkit-center;
+  animation-name: picdown;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+  will-change: transform;
+}
+
+.pic_down::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-top: 5px solid #000;
+  border-right: 5px solid #000;
+  transform: rotate(135deg);
+}
+
+@keyframes picdown {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(20px);
+  }
+}
+
+.contents {
+  width: 80%;
+  margin: auto;
+}
+
+.do-not-throw-title,
+.how-to-use-title,
+.question-title {
+  text-align: center;
+}
+
+.get-start {
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 15vh;
+}
+</style>

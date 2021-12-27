@@ -23,7 +23,6 @@
       <div class="legal">
         <h4 class="footer-h4">Legal</h4>
         <ul>
-          <li class="li">利用規約</li>
           <li class="li">プライバシーポリシー</li>
           <li class="li">特定法表記</li>
         </ul>
@@ -40,7 +39,6 @@
               >お問い合わせ</a
             >
           </li>
-          <li class="li">メディアキット</li>
           <li class="li">
             <a
               href="https://twitter.com/watataku8911"
@@ -68,7 +66,6 @@
 <style scoped>
 .footer {
   padding-top: 20px;
-  border-top: solid 3px #000;
 }
 
 .footer-h1 a {
