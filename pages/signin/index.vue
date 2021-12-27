@@ -23,10 +23,10 @@
       </div>
       <div class="passwd-look-zone" @click="change()">
         <p v-if="form.type == 'text'">
-          <img src="../../img/look.svg" width="100" height="50" />
+          <img src="../../assets/img/look.svg" width="100" height="50" />
         </p>
         <p v-if="form.type == 'password'">
-          <img src="../../img/not-look.svg" width="100" height="50" />
+          <img src="../../assets/img/not-look.svg" width="100" height="50" />
         </p>
       </div>
     </div>
@@ -35,6 +35,8 @@
     <div class="module--spacing--verySmall"></div>
     <NuxtLink to="/signup">アカウントをお持ちでない方はこちらへ。</NuxtLink>
     <div class="module--spacing--verySmall"></div>
+    <p @click="guestUser()">Guestユーザーでログイン</p>
+    <div class="module--spacing--veryLarge"></div>
     <div class="err-box">
       <ul>
         <li class="err-msg" v-if="form.emptyEmail">
@@ -55,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import "../../css/common.css";
+import "../../assets/css/common.css";
 import { defineComponent, reactive } from "vue";
 import TextInput from "../../components/UIKit/TextInput.vue";
 import Button from "../../components/UIKit/Button.vue";
@@ -134,10 +136,16 @@ export default defineComponent({
       return valid;
     };
 
+    const guestUser = () => {
+      form.email = "guest.user@example.com";
+      form.passwd = "passW0rd";
+    };
+
     return {
       form,
       change,
       login,
+      guestUser,
     };
   },
 });
