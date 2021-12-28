@@ -8,6 +8,35 @@
     </section>
 
     <section class="contents">
+      <ProductList
+        title="タイトルです"
+        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+      />
+      <ProductList
+        title="タイトルです"
+        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+      />
+      <ProductList
+        title="タイトルです"
+        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+      />
+      <ProductList
+        title="タイトルです"
+        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+      />
+      <ProductList
+        title="タイトルです"
+        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+      />
+      <ProductList
+        title="タイトルです"
+        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+      />
+      <i
+        >※取引を始めるには<NuxtLink to="/signup">サインアップ</NuxtLink
+        >してください。</i
+      >
+
       <div class="do-not-throw-box">
         <h1 class="do-not-throw-title"><span>Don't throw</span>とは</h1>
         <div class="do-not-throw-body">
@@ -41,10 +70,12 @@
 import "../assets/css/common.css";
 import { defineComponent } from "vue";
 
+import ProductList from "../components/ProductList.vue";
 import Privacy from "../components/Privacy.vue";
 
 export default defineComponent({
   components: {
+    ProductList,
     Privacy,
   },
   setup() {},
@@ -59,12 +90,18 @@ export default defineComponent({
   width: 100%;
   height: 88vh;
   border-bottom: solid 1px #000;
+  background-image: url(../assets/img/main-image.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.9;
 }
 
 .main-image-title {
   font-family: "Anton", sans-serif;
   font-family: "Lobster", cursive;
   font-size: 4em;
+  color: #000;
+  border-radius: 20px;
 }
 
 .pic_down {
@@ -83,8 +120,8 @@ export default defineComponent({
   display: block;
   width: 40px;
   height: 40px;
-  border-top: 5px solid #000;
-  border-right: 5px solid #000;
+  border-top: 8px solid black;
+  border-right: 8px solid black;
   transform: rotate(135deg);
 }
 

@@ -69,6 +69,7 @@
 }
 
 .footer-h1 a {
+  color: #37e279;
   text-decoration: none;
 }
 
