@@ -32,5 +32,6 @@ export default defineComponent({
   font-family: "Anton", sans-serif;
   font-family: "Lobster", cursive;
   text-decoration: none;
+  color: #37e279;
 }
 </style>
