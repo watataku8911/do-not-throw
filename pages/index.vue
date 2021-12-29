@@ -8,53 +8,39 @@
     </section>
 
     <section class="contents">
-      <ProductList
-        title="タイトルです"
-        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
-      />
-      <ProductList
-        title="タイトルです"
-        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
-      />
-      <ProductList
-        title="タイトルです"
-        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
-      />
-      <ProductList
-        title="タイトルです"
-        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
-      />
-      <ProductList
-        title="タイトルです"
-        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
-      />
-      <ProductList
-        title="タイトルです"
-        text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
-      />
-      <i
+      <div class="module--spacing--large"></div>
+      <h1 class="product-title">取引一覧</h1>
+      <div class="product-contents">
+        <ProductList
+          title="タイトルです"
+          text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+        />
+        <ProductList
+          title="タイトルです"
+          text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+        />
+        <ProductList
+          title="タイトルです"
+          text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+        />
+        <ProductList
+          title="タイトルです"
+          text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+        />
+        <ProductList
+          title="タイトルです"
+          text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+        />
+        <ProductList
+          title="タイトルです"
+          text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+        />
+      </div>
+      <div class="module--spacing--small"></div>
+      <i class="font-red"
         >※取引を始めるには<NuxtLink to="/signup">サインアップ</NuxtLink
         >してください。</i
       >
-
-      <div class="do-not-throw-box">
-        <h1 class="do-not-throw-title"><span>Don't throw</span>とは</h1>
-        <div class="do-not-throw-body">
-          <p class="do-not-throw-text">フードロスを防ぐアプリ。</p>
-        </div>
-      </div>
-      <div class="how-to-use-box">
-        <h1 class="how-to-use-title">使い方</h1>
-        <div class="do-not-throw-body">
-          <p class="do-not-throw-text">フードロスを防ぐアプリ。</p>
-        </div>
-      </div>
-      <div class="question-box">
-        <h1 class="question-title">よくある質問</h1>
-        <div class="do-not-throw-body">
-          <p class="do-not-throw-text">フードロスを防ぐアプリ。</p>
-        </div>
-      </div>
       <div class="module--spacing--large"></div>
       <Privacy />
     </section>
@@ -93,7 +79,7 @@ export default defineComponent({
   background-image: url(../assets/img/main-image.jpeg);
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.9;
+  opacity: 0.7;
 }
 
 .main-image-title {
@@ -139,9 +125,20 @@ export default defineComponent({
   margin: auto;
 }
 
-.do-not-throw-title,
-.how-to-use-title,
-.question-title {
+.product-title {
+  text-align: center;
+}
+
+.product-contents {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: row;
+  flex-wrap: wrap;
+}
+
+.font-red {
+  color: red;
+  display: block;
   text-align: center;
 }
 
