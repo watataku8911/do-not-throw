@@ -43,9 +43,9 @@
     <Loading v-show="!form.searchNow" />
     <div class="module--spacing--small"></div>
     <div class="imgContent">
-      <ImagePreview :imageUrl="form.imageUrl" />
+      <ImagePreviewSmall :imageUrl="form.imageUrl" />
       <div class="module--spacing--largeSmall"></div>
-      <UploadFile @fileList="setFileList" />
+      <UploadFile title="アイコン" @fileList="setFileList" />
     </div>
 
     <p>※8文字以上の半角英数字で入力して下さい</p>
@@ -119,7 +119,7 @@ import axios from "axios";
 import { defineComponent, reactive } from "vue";
 import TextInput from "../../components/UIKit/TextInput.vue";
 import Button from "../../components/UIKit/Button.vue";
-import ImagePreview from "../../components/UIKit/ImagePreview.vue";
+import ImagePreviewSmall from "../../components/UIKit/ImagePreviewSmall.vue";
 import UploadFile from "../../components/UIKit/UploadFile.vue";
 import Loading from "../../components/UIKit/Loading.vue";
 //import Look from "../../img/look.svg";
@@ -156,7 +156,6 @@ type FormData = {
   email: string;
   address: string;
   postcode: string;
-  fileList: object;
   imageUrl: string;
   passwd: string;
   confirmPasswd: string;
@@ -175,7 +174,7 @@ export default defineComponent({
   components: {
     TextInput,
     Button,
-    ImagePreview,
+    ImagePreviewSmall,
     UploadFile,
     Loading,
     //Look,
@@ -186,7 +185,6 @@ export default defineComponent({
       email: "",
       address: "",
       postcode: "",
-      fileList: null,
       imageUrl: "",
       passwd: "",
       confirmPasswd: "",
@@ -306,7 +304,6 @@ export default defineComponent({
     };
 
     const setFileList = (fileList) => {
-      form.fileList = fileList;
       const imgUrl = URL.createObjectURL(fileList[0]);
       form.imageUrl = imgUrl;
     };
