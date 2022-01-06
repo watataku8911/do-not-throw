@@ -1,21 +1,18 @@
 <template>
   <section class="mypage">
-    <h1 class="mypage-title">{{ params.id }}のマイページ</h1>
+    <h1 class="mypage-title">{{ userData.uid }}</h1>
     <div class="module--spacing--veryLarge"></div>
     <div class="icon-box">
       <p>
-        <img
-          class="icon"
-          src="../../assets/img/no-profile.png"
-          alt="アイコン"
-        />
+        <img class="icon" :src="userData.photoURL" alt="アイコン" />
       </p>
     </div>
     <div class="user-info">
-      <h2 class="user-info-username">ゲスト</h2>
-      <p class="user-info-email">guest.user@example.com</p>
+      <h2 class="user-info-username">{{ userData.userName }}</h2>
+      <p class="user-info-email">{{ userData.email }}</p>
     </div>
     <div class="module--spacing--verySmall"></div>
+    <Button msg="ユーザー情報を編集する" @push="editUser()" />
     <Button msg="出品する" @push="editProduct()" />
     <div class="module--spacing--veryLarge"></div>
     <div class="history">
@@ -52,10 +49,12 @@
 
 <script lang="ts">
 import "../../assets/css/common.css";
-import { defineComponent } from "vue";
+import { getUserData } from "../../functions/user";
+import { defineComponent, onMounted, ref } from "vue";
 
 import Button from "../../components/UIKit/Button.vue";
 import ProductList from "../../components/ProductList.vue";
+import { DocumentData } from "@firebase/firestore";
 
 export default defineComponent({
   components: {
@@ -63,14 +62,32 @@ export default defineComponent({
     ProductList,
   },
   setup() {
-    const { params } = useRoute();
+    const userData = ref<DocumentData>({});
 
     const editProduct = () => {
       const router = useRouter();
       router.push("/product-edit");
     };
 
-    return { params, editProduct };
+    const editUser = () => {
+      const uid = window.location.pathname.split("/mypage/")[1];
+      const router = useRouter();
+      router.push("/user-edit/" + uid);
+    };
+
+    onMounted(() => {
+      const uid = window.location.pathname.split("/mypage/")[1];
+      const router = useRouter();
+      getUserData(uid)
+        .then((result) => {
+          userData.value = result;
+        })
+        .catch(() => {
+          router.push("/error");
+        });
+    });
+
+    return { userData, editUser, editProduct };
   },
 });
 </script>

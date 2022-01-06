@@ -14,6 +14,9 @@
       <swiper-slide>Slide 2</swiper-slide>
       <swiper-slide>Slide 3</swiper-slide> -->
       <swiper-slide>Slide 4</swiper-slide>
+      zs
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
     </swiper>
     <div class="module--spacing--small"></div>
     <div class="product-price">¥2000</div>

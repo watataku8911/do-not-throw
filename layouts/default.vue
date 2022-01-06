@@ -20,6 +20,5 @@ export default defineComponent({
     Header,
     Footer,
   },
-  setup() {},
 });
 </script>

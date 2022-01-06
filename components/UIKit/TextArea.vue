@@ -1,33 +1,33 @@
 <template>
   <textarea
     class="textarea"
-    :placeholder="this.placeholder"
-    :cols="this.cols"
-    :rows="this.rows"
-    :name="this.name"
+    :placeholder="placeholder"
+    :cols="cols"
+    :rows="rows"
+    :name="name"
+    :value="value"
     @input="updateValue"
-    :value="this.value"
   >
   </textarea>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
+<script>
+export default {
   props: {
-    placeholder: { type: String },
-    cols: { type: String },
-    rows: { type: String },
-    name: { type: String },
-    value: { type: String },
+    placeholder: { type: String, required: true },
+    cols: { type: String, required: true },
+    rows: { type: String, required: true },
+    name: { type: String, required: true },
+    value: { type: String, required: true },
   },
-  methods: {
-    updateValue(e) {
-      this.$emit("input", e.target.value);
-    },
+  emits: ["update:modalValue"],
+  setup(_, context) {
+    const updateValue = (e) => {
+      context.emit("update:modalValue", e.target.value);
+    };
+    return { updateValue };
   },
-});
+};
 </script>
 
 <style scoped>
