@@ -1,20 +1,12 @@
 <template>
   <section class="sign-up">
-    <h2>サインアップ</h2>
+    <h2>ユーザー編集</h2>
     <TextInput
       v-model:modalValue="form.name"
       type="text"
       placeholder="ユーザーネーム"
       name="name"
       :value="form.name"
-    />
-    <div class="module--spacing--small"></div>
-    <TextInput
-      v-model:modalValue="form.email"
-      type="text"
-      placeholder="メールアドレス"
-      name="email"
-      :value="form.email"
     />
     <div class="module--spacing--verySmall"></div>
     <p>※数字のみ</p>
@@ -48,66 +40,21 @@
       <UploadFile title="アイコン" @fileList="setFileList" />
     </div>
 
-    <p>※8文字以上の半角英数字で入力して下さい</p>
-    <div class="module--spacing--verySmall"></div>
-    <div class="passwd-box">
-      <div class="passwd-input-zone">
-        <TextInput
-          v-model:modalValue="form.passwd"
-          :type="form.type"
-          placeholder="パスワード"
-          name="passwd"
-          :value="form.passwd"
-        />
-        <div class="module--spacing--small"></div>
-        <TextInput
-          v-model:modalValue="form.confirmPasswd"
-          :type="form.type"
-          placeholder="確認"
-          name="confirmPasswd"
-          :value="form.confirmPasswd"
-        />
-      </div>
-      <div class="passwd-look-zone" @click="change()">
-        <p v-if="form.type == 'text'">
-          <img src="../../assets/img/look.svg" width="100" height="50" />
-        </p>
-        <p v-if="form.type == 'password'">
-          <img src="../../assets/img/not-look.svg" width="100" height="50" />
-        </p>
-      </div>
-    </div>
     <div class="module--spacing--large"></div>
-    <Button msg="サインアップ" @push="signup" v-show="form.signupNow" />
-    <Loading v-show="!form.signupNow" />
+    <Button msg="ユーザー情報を編集" @push="signup" v-show="form.updtateNow" />
+    <Loading v-show="!form.updtateNow" />
     <div class="module--spacing--verySmall"></div>
-    <NuxtLink to="/signin">アカウントをお持ちの方はこちらへ。</NuxtLink>
-    <div class="module--spacing--verySmall"></div>
+    <p @click="back()">戻る</p>
     <div class="err-box">
       <ul>
         <li class="err-msg" v-if="form.emptyName">
           ユーザーネームを入力してください。
-        </li>
-        <li class="err-msg" v-if="form.emptyEmail">
-          メールアドレスを入力してください。
-        </li>
-        <li class="err-msg" v-if="form.validEmail">
-          メールアドレスを正しく入力してください。
         </li>
         <li class="err-msg" v-if="form.emptyPostcode">
           郵便番号を入力してください。
         </li>
         <li class="err-msg" v-if="form.emptyAddress">
           住所を入力してください。
-        </li>
-        <li class="err-msg" v-if="form.emptyPasswd">
-          パスワードを入力してください。
-        </li>
-        <li class="err-msg" v-if="form.validPasswd">
-          パスワードは8文字以上の半角英数字で入力して下さい
-        </li>
-        <li class="err-msg" v-if="form.matchPasswd">
-          パスワードが一致しません
         </li>
       </ul>
     </div>
@@ -116,6 +63,11 @@
 
 <script lang="ts">
 import "../../assets/css/common.css";
+import {
+  listenAuthState,
+  getUserData,
+  updateUserData,
+} from "../../functions/user";
 import axios from "axios";
 import { defineComponent, reactive } from "vue";
 import TextInput from "../../components/UIKit/TextInput.vue";
@@ -123,8 +75,8 @@ import Button from "../../components/UIKit/Button.vue";
 import ImagePreviewSmall from "../../components/UIKit/ImagePreviewSmall.vue";
 import UploadFile from "../../components/UIKit/UploadFile.vue";
 import Loading from "../../components/UIKit/Loading.vue";
+import { Axios } from "axios";
 //import Look from "../../img/look.svg";
-import { signUp } from "../../functions/user";
 type Resp = {
   config: object;
   data: Data;
@@ -155,24 +107,15 @@ type Results = {
 };
 type FormData = {
   name: string;
-  email: string;
   address: string;
   postcode: string;
   fileList: BlobPart[] | null;
   imageUrl: string;
-  passwd: string;
-  confirmPasswd: string;
-  type: string;
   emptyName: boolean;
-  emptyEmail: boolean;
-  validEmail: boolean;
   emptyPostcode: boolean;
   emptyAddress: boolean;
-  emptyPasswd: boolean;
-  validPasswd: boolean;
-  matchPasswd: boolean;
   searchNow: boolean;
-  signupNow: boolean;
+  updtateNow: boolean;
 };
 export default defineComponent({
   components: {
@@ -186,42 +129,56 @@ export default defineComponent({
   setup() {
     const form = reactive<FormData>({
       name: "",
-      email: "",
       address: "",
       postcode: "",
       fileList: null,
       imageUrl: "",
-      passwd: "",
-      confirmPasswd: "",
-      type: "password",
       emptyName: false,
-      emptyEmail: false,
-      validEmail: false,
       emptyPostcode: false,
       emptyAddress: false,
-      emptyPasswd: false,
-      validPasswd: false,
-      matchPasswd: false,
       searchNow: true,
-      signupNow: true,
+      updtateNow: true,
     });
 
+    if (!listenAuthState()) {
+      const uid = window.location.pathname.split("/user-edit/")[1];
+      getUserData(uid)
+        .then((result) => {
+          form.name = result.userName;
+          form.postcode = String(result.postcode);
+          form.address = result.address;
+          form.imageUrl = result.photoURL;
+        })
+        .catch(() => {
+          throw new Error("ユーザーデータが取得できません。");
+        });
+    } else {
+      const router = useRouter();
+      router.push("/signin");
+    }
+
     const signup = () => {
-      form.signupNow = false;
+      const uid = window.location.pathname.split("/user-edit/")[1];
+      form.updtateNow = false;
       let errFlg = false;
       errFlg = validation();
       if (!errFlg) {
-        signUp(
+        updateUserData(
           form.name,
-          form.email,
           Number(form.postcode),
           form.address,
+          form.imageUrl,
           form.fileList,
-          form.passwd
-        ).catch(() => {
-          alert("異常が見つかりました");
-          form.signupNow = true;
-        });
+          uid
+        )
+          .then(() => {
+            const router = useRouter();
+            router.push("/mypage/" + uid);
+          })
+          .catch(() => {
+            alert("ユーザー情報を編集できませんでした。");
+            form.updtateNow = true;
+          });
       }
     };
 
@@ -249,7 +206,7 @@ export default defineComponent({
       }
     };
 
-    const dataFetch = () => {
+    const dataFetch = (): Promise<any | null> => {
       const endPoint = "https://zipcloud.ibsnet.co.jp/api/search";
       return new Promise((resolve, reject) => {
         axios
@@ -260,9 +217,6 @@ export default defineComponent({
     };
 
     const validation = (): boolean => {
-      const regexp =
-        /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/;
-      const halfWidth = /^([a-zA-Z0-9]{8,})$/;
       let valid = false;
 
       if (form.name.length == 0) {
@@ -270,19 +224,6 @@ export default defineComponent({
         valid = true;
       } else {
         form.emptyName = false;
-      }
-
-      if (form.email.length == 0) {
-        form.emptyEmail = true;
-        form.validEmail = false;
-        valid = true;
-      } else if (!regexp.test(form.email)) {
-        form.emptyEmail = false;
-        form.validEmail = true;
-        valid = true;
-      } else {
-        form.emptyEmail = false;
-        form.validEmail = false;
       }
 
       if (form.postcode.length == 0) {
@@ -298,27 +239,6 @@ export default defineComponent({
       } else {
         form.emptyAddress = false;
       }
-
-      if (form.passwd.length == 0) {
-        form.emptyPasswd = true;
-        form.validPasswd = false;
-        form.matchPasswd = false;
-        valid = true;
-      } else if (!halfWidth.test(form.passwd)) {
-        form.emptyPasswd = false;
-        form.validPasswd = true;
-        form.matchPasswd = false;
-        valid = true;
-      } else if (form.passwd != form.confirmPasswd) {
-        form.emptyPasswd = false;
-        form.validPasswd = false;
-        form.matchPasswd = true;
-        valid = true;
-      } else {
-        form.emptyPasswd = false;
-        form.validPasswd = false;
-        form.matchPasswd = false;
-      }
       return valid;
     };
 
@@ -329,12 +249,10 @@ export default defineComponent({
       form.imageUrl = imgUrl;
     };
 
-    const change = () => {
-      if (form.type == "password") {
-        form.type = "text";
-      } else if (form.type == "text") {
-        form.type = "password";
-      }
+    const back = () => {
+      const uid = window.location.pathname.split("/user-edit/")[1];
+      const router = useRouter();
+      router.push("/mypage/" + uid);
     };
 
     return {
@@ -342,7 +260,7 @@ export default defineComponent({
       signup,
       searchAdress,
       setFileList,
-      change,
+      back,
     };
   },
 });

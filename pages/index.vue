@@ -14,6 +14,7 @@
         <ProductList
           title="タイトルです"
           text="テキストですテキストですテキストですテキストですテキストですテキストですテキストです"
+          @click="product()"
         />
         <ProductList
           title="タイトルです"
@@ -64,7 +65,16 @@ export default defineComponent({
     ProductList,
     Privacy,
   },
-  setup() {},
+  setup() {
+    const product = () => {
+      const router = useRouter();
+      router.push("/product/1");
+    };
+
+    return {
+      product,
+    };
+  },
 });
 </script>
 

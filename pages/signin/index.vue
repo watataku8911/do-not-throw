@@ -31,7 +31,8 @@
       </div>
     </div>
     <div class="module--spacing--large"></div>
-    <Button msg="ログイン" @push="login" />
+    <Button msg="ログイン" @push="login" v-show="form.signinNow" />
+    <Loading v-show="!form.signinNow" />
     <div class="module--spacing--verySmall"></div>
     <NuxtLink to="/signup">アカウントをお持ちでない方はこちらへ。</NuxtLink>
     <div class="module--spacing--verySmall"></div>
@@ -61,7 +62,21 @@ import "../../assets/css/common.css";
 import { defineComponent, reactive } from "vue";
 import TextInput from "../../components/UIKit/TextInput.vue";
 import Button from "../../components/UIKit/Button.vue";
+import Loading from "../../components/UIKit/Loading.vue";
+import { signIn } from "../../functions/user";
 
+type UserData = {
+  additionalUserInfo: object;
+  credential: null;
+  operationType: String;
+  user: User;
+};
+type User = {
+  uid: string;
+  email: string;
+  phoneNumber: number;
+  displayName: string;
+};
 type FormData = {
   email: string;
   passwd: string;
@@ -70,11 +85,13 @@ type FormData = {
   validEmail: boolean;
   emptyPasswd: boolean;
   validPasswd: boolean;
+  signinNow: boolean;
 };
 export default defineComponent({
   components: {
     TextInput,
     Button,
+    Loading,
   },
   setup() {
     const form = reactive<FormData>({
@@ -85,6 +102,7 @@ export default defineComponent({
       validEmail: false,
       emptyPasswd: false,
       validPasswd: false,
+      signinNow: true,
     });
 
     const change = () => {
@@ -96,10 +114,21 @@ export default defineComponent({
     };
 
     const login = () => {
+      form.signinNow = false;
       let errFlg = false;
       errFlg = validation();
       if (!errFlg) {
-        alert("login");
+        signIn(form.email, form.passwd)
+          .then((uid) => {
+            const router = useRouter();
+            router.push("/mypage/" + uid);
+          })
+          .catch(() => {
+            alert("異常が見つかりました");
+            form.signinNow = true;
+          });
+      } else {
+        form.signinNow = true;
       }
     };
 

@@ -30,10 +30,12 @@ export default defineComponent({
 
 <style scoped>
 .product-list {
+  margin-top: 50px;
   width: 30%;
   height: 380px;
   border: solid 1px black;
 }
+
 .image-zone {
   height: 280px;
 }

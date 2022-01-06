@@ -1,6 +1,6 @@
 <template>
   <label for="corporation_file" class="btn btn-success">
-    アイコンを設定する
+    {{ title }}を設定する
     <input
       type="file"
       class="file_input"
@@ -16,6 +16,12 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+  },
   emits: ["fileList"],
   setup(_, context) {
     const onDrop = (e) => {
