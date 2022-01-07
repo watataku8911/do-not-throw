@@ -1,29 +1,12 @@
-# Nuxt 3 Minimal Starter
+# Don't thorw
+> フードロスを防ぐアプリ
 
-We recommend to look at the [documentation](https://v3.nuxtjs.org).
+# 使用技術
 
-## Setup
+- Nuxt3 ✖️ TypeScript ✖️ Firebase(v9.6.1)
 
-Make sure to install the dependencies
+# 必要モジュール
 
-```bash
-yarn install
 ```
-
-## Development
-
-Start the development server on http://localhost:3000
-
-```bash
-yarn dev
+$ npm install firebase @types/firebase swiper
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-yarn build
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
