@@ -12,8 +12,8 @@
       <p class="user-info-email">{{ userData.email }}</p>
     </div>
     <div class="module--spacing--verySmall"></div>
-    <Button msg="ユーザー情報を編集する" @push="editUser()" />
-    <Button msg="出品する" @push="editProduct()" />
+    <Button msg="ユーザー情報を編集する" @push="editUser()" v-if="loginId" />
+    <Button msg="出品する" @push="editProduct()" v-if="loginId" />
     <div class="module--spacing--veryLarge"></div>
     <div class="history">
       <h1 class="history-title">履歴</h1>
@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import "../../assets/css/common.css";
-import { getUserData } from "../../functions/user";
+import { listenAuthState, getUserData } from "../../functions/user";
 import { defineComponent, onMounted, ref } from "vue";
 
 import Button from "../../components/UIKit/Button.vue";
@@ -63,20 +63,27 @@ export default defineComponent({
   },
   setup() {
     const userData = ref<DocumentData>({});
+    const loginId = ref<string>("");
+
+    const uid = window.location.pathname.split("/mypage/")[1];
+    const router = useRouter();
 
     const editProduct = () => {
-      const router = useRouter();
       router.push("/product-edit");
     };
 
     const editUser = () => {
-      const uid = window.location.pathname.split("/mypage/")[1];
-      const router = useRouter();
       router.push("/user-edit/" + uid);
     };
 
     onMounted(() => {
-      const uid = window.location.pathname.split("/mypage/")[1];
+      listenAuthState()
+        .then((user) => {
+          loginId.value = user.uid;
+        })
+        .catch(() => {
+          loginId.value = "";
+        });
       const router = useRouter();
       getUserData(uid)
         .then((result) => {

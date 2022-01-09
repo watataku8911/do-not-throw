@@ -31,12 +31,16 @@
       rows="10"
       :value="form.productBody"
     />
+    <div class="module--spacing--large"></div>
+    <Button msg="出品する" @push="listing()" />
+    <!-- <Button msg="商品情報を編集する" @push="edit()" /> -->
   </section>
 </template>
 
 <script lang="ts">
 import "../../assets/css/common.css";
 import { defineComponent, reactive } from "vue";
+import { productAdd } from "../../functions/product";
 import ImagePreviewLarge from "../../components/UIKit/ImagePreviewLarge.vue";
 import UploadFile from "../../components/UIKit/UploadFile.vue";
 import TextInput from "../../components/UIKit/TextInput.vue";
@@ -45,6 +49,7 @@ import Button from "../../components/UIKit/Button.vue";
 
 type FormData = {
   images: string[];
+  fileLists: Array<BlobPart[]> | null;
   productName: string;
   productPrice: string;
   productBody: string;
@@ -60,18 +65,51 @@ export default defineComponent({
   setup() {
     const form = reactive<FormData>({
       images: [],
+      fileLists: null,
       productName: "",
       productPrice: "",
       productBody: "",
     });
 
-    const setFileList = (fileList) => {
+    const uid = window.location.pathname.split("/product-edit/")[1];
+
+    const listing = () => {
+      let flg = false;
+
+      if (!flg) {
+        productAdd(
+          form.fileLists,
+          form.productName,
+          Number(form.productPrice),
+          form.productBody,
+          uid
+        );
+      }
+    };
+
+    //  const edit = () => {
+    //   let flg = false;
+
+    //   if (!flg) {
+    //     productAdd(
+    //       form.fileLists,
+    //       form.productName,
+    //       Number(form.productPrice),
+    //       form.productBody,
+    //       uid
+    //     );
+    //   }
+    // };
+
+    const setFileList = (fileList: BlobPart[]) => {
+      form.fileLists.push(fileList);
       const imgUrl = URL.createObjectURL(fileList[0]);
       form.images.push(imgUrl);
     };
 
     return {
       form,
+      listing,
       setFileList,
     };
   },
