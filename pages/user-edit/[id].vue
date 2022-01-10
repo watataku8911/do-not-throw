@@ -116,6 +116,7 @@ type FormData = {
   emptyAddress: boolean;
   searchNow: boolean;
   updtateNow: boolean;
+  loginId: string;
 };
 export default defineComponent({
   components: {
@@ -138,27 +139,30 @@ export default defineComponent({
       emptyAddress: false,
       searchNow: true,
       updtateNow: true,
+      loginId: "",
     });
 
-    if (!listenAuthState()) {
-      const uid = window.location.pathname.split("/user-edit/")[1];
-      getUserData(uid)
-        .then((result) => {
-          form.name = result.userName;
-          form.postcode = String(result.postcode);
-          form.address = result.address;
-          form.imageUrl = result.photoURL;
-        })
-        .catch(() => {
-          throw new Error("ユーザーデータが取得できません。");
-        });
-    } else {
-      const router = useRouter();
-      router.push("/signin");
-    }
+    listenAuthState()
+      .then((user) => {
+        form.loginId = user.uid;
+      })
+      .catch(() => {
+        form.loginId = "";
+      });
+
+    const uid = window.location.pathname.split("/user-edit/")[1];
+    getUserData(uid)
+      .then((result) => {
+        form.name = result.userName;
+        form.postcode = String(result.postcode);
+        form.address = result.address;
+        form.imageUrl = result.photoURL;
+      })
+      .catch(() => {
+        throw new Error("ユーザーデータが取得できません。");
+      });
 
     const signup = () => {
-      const uid = window.location.pathname.split("/user-edit/")[1];
       form.updtateNow = false;
       let errFlg = false;
       errFlg = validation();
